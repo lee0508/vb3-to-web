@@ -1,0 +1,5 @@
+19 행: frm사업장정보의 Icon 속성에 잘못된 파일 참조가 있습니다.
+40 행: cmdExit의 Picture 속성에 잘못된 파일 참조가 있습니다.
+49 행: cmdDelete의 Picture 속성에 잘못된 파일 참조가 있습니다.
+58 행: cmdSave의 Picture 속성에 잘못된 파일 참조가 있습니다.
+67 행: cmdFind의 Picture 속성에 잘못된 파일 참조가 있습니다.

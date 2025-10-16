@@ -1,0 +1,682 @@
+'+----------------------+
+'/// 거래명세서 출력 ///
+'+----------------------+
+Private Sub SubPrint_DealBill(strDealDate As String, lngLogCnt As Long)
+Dim strSQL               As String
+Dim P                    As Printer
+Dim strPort              As String
+Dim intFile              As Integer
+Dim blnEof               As Boolean
+Dim intPrtCnt            As Integer
+Dim strPrtLine           As String
+Dim inti                 As Integer
+Dim C_TMargin            As Integer  'Top Margin
+Dim C_LMargin            As Integer  'Left Margin
+Dim intA                 As Integer
+Dim intB                 As Integer
+Dim intForA              As Integer
+Dim intForB              As Integer
+Dim intPrtCntA           As Integer
+Dim intPrtCntB           As Integer
+Dim SW_A                 As Integer
+Dim SW_B                 As Integer
+
+Dim C_intCntPerPage      As Integer
+Dim intCurPrtCntPerPageA As Integer
+Dim intCurPrtCntPerPageB As Integer
+Dim intCurPageCntA       As Integer
+Dim intCurPageCntB       As Integer
+Dim intTotPageCnt        As Integer
+Dim intTotCnt            As Integer
+Dim strSaleDate          As String   '거래일자
+Dim lngSaleNo            As Long     '거래번호
+Dim strBuyerCode         As String   '매출처코드
+Dim strEnterNo           As String   '등록번호
+Dim strEnterName         As String   '상호
+Dim strRepName           As String   '성명
+Dim strEnterAddress      As String   '주소
+Dim curSubTotMny         As Currency 'PAge 당 금액
+Dim curTotMny            As Currency '총금액
+
+Dim A()               As String   '상
+Dim B()               As String   '하
+
+Dim lngR              As Long
+Dim lngC              As Long
+    
+    For Each P In Printers
+        If Trim(P.DeviceName) = Trim(cboPrinter.Text) And lstPort.List(cboPrinter.ListIndex) = P.Port Then
+           Set Printer = P
+           Exit For
+        End If
+    Next
+    Screen.MousePointer = vbHourglass
+    P_adoRec.CursorLocation = adUseClient
+    strSQL = "SELECT T1.사업장코드 AS 사업장코드, T1.거래일자 AS 거래일자, T1.거래번호 AS 거래번호, " _
+                  & "T3.사업자번호 AS 등록번호, T1.매출처코드, T3.매출처명 AS 상호, T3.대표자명 AS 성명, (T3.주소+T3.번지) AS 주소, " _
+                  & "(SELECT SUM(출고수량 * 출고단가) FROM 자재입출내역 " _
+                   & " WHERE 사업장코드 = '" & PB_regUserinfoU.UserBranchCode & "' " _
+                      & "AND 입출고구분 = 2 AND 사용구분 = 0 " _
+                      & "AND 거래일자 = '" & strDealDate & "' " _
+                      & "AND 거래번호 = " & lngLogCnt & ") AS 총금액, " _
+                  & "(SELECT COUNT(세부코드) FROM 자재입출내역 " _
+                   & " WHERE 사업장코드 = '" & PB_regUserinfoU.UserBranchCode & "' " _
+                      & "AND 입출고구분 = 2 AND 사용구분 = 0 " _
+                      & "AND 거래일자 = '" & strDealDate & "' " _
+                      & "AND 거래번호 = " & lngLogCnt & ") AS 건수, " _
+                  & "(T1.분류코드+T1.세부코드) AS 코드, T2.자재명 AS 품명, T2.규격 AS 규격, " _
+                  & "T1.출고수량 AS 수량, T2.단위 AS 단위, T1.출고단가 AS 단가, T1.출고부가 AS 부가 " _
+             & "FROM 자재입출내역 T1 " _
+             & "LEFT JOIN 자재 T2 ON T2.분류코드 = T1.분류코드 AND T2.세부코드 = T1.세부코드 " _
+             & "LEFT JOIN 매출처 T3 ON T3.매출처코드 = T1.매출처코드 " _
+            & "WHERE T1.사업장코드 = '" & PB_regUserinfoU.UserBranchCode & "' " _
+              & "AND T1.입출고구분 = 2 AND T1.사용구분 = 0 " _
+              & "AND T1.거래일자 = '" & strDealDate & "' " _
+              & "AND T1.거래번호 = " & lngLogCnt & " " _
+            & "ORDER BY T1.사업장코드, T1.거래일자, T1.거래번호, T1.입출고시간 "
+    On Error GoTo ERROR_TABLE_SELECT
+    P_adoRec.Open strSQL, PB_adoCnnSQL, adOpenStatic, adLockReadOnly
+    If P_adoRec.RecordCount = 0 Then
+       P_adoRec.Close
+       Screen.MousePointer = vbDefault
+       Exit Sub
+    Else
+       C_intCntPerPage = 12  'Count Per Page
+       intTotCnt = P_adoRec("건수")
+       C_TMargin = 5
+       C_LMargin = 13
+       intCurPageCntA = 1: intCurPageCntB = 1
+       '인쇄할 전체페이지 계산
+       intTotPageCnt = (intTotCnt \ C_intCntPerPage) + IIf(intTotCnt Mod C_intCntPerPage = 0, 0, 1)
+       
+       strSaleDate = P_adoRec("거래일자")
+       lngSaleNo = P_adoRec("거래번호")
+       strBuyerCode = P_adoRec("매출처코드")
+       strEnterNo = P_adoRec("등록번호")
+       strEnterName = P_adoRec("상호")
+       strRepName = P_adoRec("성명")
+       strEnterAddress = P_adoRec("주소")
+       curTotMny = P_adoRec("총금액")
+       ReDim A(intTotCnt, 7)
+       ReDim B(intTotCnt, 7)
+       Do Until P_adoRec.EOF
+          A(intA, 0) = P_adoRec("품명")
+          A(intA, 1) = P_adoRec("규격")
+          A(intA, 2) = P_adoRec("수량")
+          A(intA, 3) = P_adoRec("단위")
+          A(intA, 4) = P_adoRec("단가")
+          A(intA, 5) = P_adoRec("수량") * P_adoRec("단가")
+          A(intA, 6) = curSubTotMny + Vals(A(intA, 5))
+          curSubTotMny = Vals(A(intA, 6))
+          intA = intA + 1
+          P_adoRec.MoveNext
+       Loop
+       P_adoRec.Close
+       For intA = LBound(A, 1) To UBound(A, 1) - 1
+           For intB = LBound(A, 2) To UBound(A, 2) - 1
+               B(intA, intB) = A(intA, intB)
+           Next intB
+       Next intA
+    End If
+    'strPort = x.Port                  '예)\\Gp202\hp 'Print On Printer
+    'strPort = "C:\Documents\거래명세서.TXT"
+    'intFile = FreeFile
+    'Open strPort For Output As #intFile
+    Printer.PaperSize = vbPRPSA4          '용지설정
+    Printer.Orientation = vbPRORPortrait  '용지방향 [ vbPRORPortrait(세로), vbPRORLandscape(가로) ]
+    Printer.FontName = "굴림체"
+    Printer.FontUnderline = False
+    Printer.FontSize = 10
+    Printer.FontBold = False
+    intForA = LBound(A, 1): intForB = LBound(B, 1)
+LOOP_A:
+    For intA = intForA To UBound(A, 1) - 1
+        Printer.FontSize = 10
+        If SW_A = 0 Then
+           SW_A = 1
+           intCurPageCntA = 1
+           SubPrint_DealBill_HEAD_1 C_TMargin, C_LMargin, intCurPageCntA, intTotPageCnt, strSaleDate, lngSaleNo, _
+                                    strBuyerCode, strEnterNo, strEnterName, strRepName, strEnterAddress, curTotMny
+        Else
+           If (intPrtCntA Mod C_intCntPerPage) = 0 Then
+              intCurPageCntA = intCurPageCntA + 1
+              intCurPrtCntPerPageA = 0
+              SubPrint_DealBill_HEAD_1 C_TMargin, C_LMargin, intCurPageCntA, intTotPageCnt, strSaleDate, lngSaleNo, _
+                                       strBuyerCode, strEnterNo, strEnterName, strRepName, strEnterAddress, curTotMny
+           End If
+        End If
+        '번호, 0.품명, 1.규격, 2.수량, 3.단위, 4.단가, 5.금액
+        Printer.FontSize = 10
+        If Trim(PB_regUserinfoU.UserBranchName) = "(주)신세계전기" Then
+           Printer.Print Space(C_LMargin) & PADL(intA + 1, 2, "") _
+                    & Space(2) & PADR(A(intA, 0), 22, "") _
+                    & Space(2) & PADR(A(intA, 1), 22, "") _
+                    & Space(5) & PADL(Format(Vals(A(intA, 2)), "#,0"), 6, "") _
+                    & Space(3) & PADR(A(intA, 3), 4, "") _
+                    & Space(0) & PADL(Format(Vals(A(intA, 4)), "#,0.00"), 13, "") _
+                    & Space(0) & PADL(Format(Vals(A(intA, 5)), "#,0"), 13, "")
+        Else
+           Printer.Print Space(C_LMargin) & PADL(intA + 1, 2, "") _
+                    & Space(2) & PADR(A(intA, 0), 22, "") _
+                    & Space(2) & PADR(A(intA, 1), 22, "") _
+                    & Space(6) & PADL(Format(Vals(A(intA, 2)), "#,0"), 6, "") _
+                    & Space(3) & PADR(A(intA, 3), 4, "") _
+                    & Space(0) & PADL(Format(Vals(A(intA, 4)), "#,0.00"), 13, "") _
+                    & Space(0) & PADL(Format(Vals(A(intA, 5)), "#,0"), 13, "")
+        End If
+        Printer.FontSize = 2
+        Printer.Print ""
+        Printer.FontSize = 10
+        
+        intPrtCntA = intPrtCntA + 1
+        intCurPrtCntPerPageA = intCurPrtCntPerPageA + 1
+        If ((intCurPrtCntPerPageA Mod C_intCntPerPage) = 0) Or intPrtCntA = UBound(A, 1) Then
+           If intPrtCntA = UBound(A, 1) Then
+              Printer.FontSize = 10
+              If ((intCurPrtCntPerPageA Mod C_intCntPerPage) <> 0) Then
+                 Printer.Print Space(C_LMargin + 30) & "--- 이 하 여 백 ---"
+                 For inti = 1 To C_intCntPerPage - intCurPrtCntPerPageA - 1
+                     Printer.FontSize = 2: Printer.Print ""
+                     Printer.FontSize = 10: Printer.Print ""
+                 Next inti
+              Else
+                 For inti = 1 To C_intCntPerPage - intCurPrtCntPerPageA
+                     Printer.FontSize = 2: Printer.Print ""
+                     Printer.FontSize = 10: Printer.Print ""
+                 Next inti
+              End If
+           Else
+              For inti = 1 To C_intCntPerPage - intCurPrtCntPerPageA
+                  Printer.FontSize = 2: Printer.Print ""
+                  Printer.FontSize = 10: Printer.Print ""
+              Next inti
+           End If
+           Printer.FontSize = 2
+           Printer.Print ""
+           Printer.FontSize = 10
+           If intPrtCntA = UBound(A, 1) Then          '마지막이면
+              If Trim(PB_regUserinfoU.UserBranchName) = "(주)신세계전기" Then
+                 Printer.Print Space(C_LMargin + 81) & PADL(Format(Vals(A(intA, 6)), "#,0"), 13, "")
+              Else
+                 Printer.Print Space(C_LMargin + 82) & PADL(Format(Vals(A(intA, 6)), "#,0"), 13, "")
+              End If
+           Else
+              Printer.Print Space(C_LMargin + 52) & PADL(Space(1), 18, "*") & PADL("(다음장에계속)", 14, "")
+           End If
+           
+           Printer.FontSize = 10: Printer.Print ""
+           Printer.FontSize = 2: Printer.Print ""
+           Printer.FontSize = 10: Printer.Print ""
+           Printer.FontSize = 10: Printer.Print ""
+           
+           intForA = intA + 1
+           GoTo LOOP_B
+        End If
+    Next intA
+LOOP_B:
+    For intB = intForB To UBound(B, 1) - 1
+        Printer.FontSize = 10
+        If SW_B = 0 Then
+           SW_B = 1
+           intCurPageCntB = 1
+           SubPrint_DealBill_HEAD_1 C_TMargin, C_LMargin, intCurPageCntB, intTotPageCnt, strSaleDate, lngSaleNo, _
+                                    strBuyerCode, strEnterNo, strEnterName, strRepName, strEnterAddress, curTotMny
+        Else
+           If (intPrtCntB Mod C_intCntPerPage) = 0 Then
+              intCurPageCntB = intCurPageCntB + 1
+              intCurPrtCntPerPageB = 0
+              SubPrint_DealBill_HEAD_1 C_TMargin, C_LMargin, intCurPageCntB, intTotPageCnt, strSaleDate, lngSaleNo, _
+                                       strBuyerCode, strEnterNo, strEnterName, strRepName, strEnterAddress, curTotMny
+           End If
+        End If
+        '번호, 0.품명, 1.규격, 2.수량, 3.단위, 4.단가, 5.금액
+        Printer.FontSize = 10
+        If Trim(PB_regUserinfoU.UserBranchName) = "(주)신세계전기" Then
+           Printer.Print Space(C_LMargin) & PADL(intB + 1, 2, "") _
+                    & Space(2) & PADR(B(intB, 0), 22, "") _
+                    & Space(2) & PADR(B(intB, 1), 22, "") _
+                    & Space(5) & PADL(Format(Vals(B(intB, 2)), "#,0"), 6, "") _
+                    & Space(3) & PADR(B(intB, 3), 4, "") _
+                    & Space(0) & PADL(Format(Vals(B(intB, 4)), "#,0.00"), 13, "") _
+                    & Space(0) & PADL(Format(Vals(B(intB, 5)), "#,0"), 13, "")
+        Else
+           Printer.Print Space(C_LMargin) & PADL(intB + 1, 2, "") _
+                    & Space(2) & PADR(B(intB, 0), 22, "") _
+                    & Space(2) & PADR(B(intB, 1), 22, "") _
+                    & Space(6) & PADL(Format(Vals(B(intB, 2)), "#,0"), 6, "") _
+                    & Space(3) & PADR(B(intB, 3), 4, "") _
+                    & Space(0) & PADL(Format(Vals(B(intB, 4)), "#,0.00"), 13, "") _
+                    & Space(0) & PADL(Format(Vals(B(intB, 5)), "#,0"), 13, "")
+        End If
+        Printer.FontSize = 2
+        Printer.Print ""
+        Printer.FontSize = 10
+        intPrtCntB = intPrtCntB + 1
+        intCurPrtCntPerPageB = intCurPrtCntPerPageB + 1
+        If ((intCurPrtCntPerPageB Mod C_intCntPerPage) = 0) Or intPrtCntB = UBound(B, 1) Then
+           If intPrtCntB = UBound(B, 1) Then
+              Printer.FontSize = 10
+              If ((intCurPrtCntPerPageB Mod C_intCntPerPage) <> 0) Then
+                 Printer.Print Space(C_LMargin + 30) & "--- 이 하 여 백 ---"
+                 For inti = 1 To C_intCntPerPage - intCurPrtCntPerPageB - 1
+                     Printer.FontSize = 2: Printer.Print ""
+                     Printer.FontSize = 10: Printer.Print ""
+                 Next inti
+              Else
+                 For inti = 1 To C_intCntPerPage - intCurPrtCntPerPageB
+                     Printer.FontSize = 2: Printer.Print ""
+                     Printer.FontSize = 10: Printer.Print ""
+                 Next inti
+              End If
+           Else
+              For inti = 1 To C_intCntPerPage - intCurPrtCntPerPageB
+                  Printer.FontSize = 2: Printer.Print ""
+                  Printer.FontSize = 10: Printer.Print ""
+              Next inti
+           End If
+           Printer.FontSize = 2
+           Printer.Print ""
+           Printer.FontSize = 10
+           If intPrtCntB = UBound(B, 1) Then
+              If Trim(PB_regUserinfoU.UserBranchName) = "(주)신세계전기" Then
+                 Printer.Print Space(C_LMargin + 81) & PADL(Format(Vals(B(intB, 6)), "#,0"), 13, "")
+              Else
+                 Printer.Print Space(C_LMargin + 82) & PADL(Format(Vals(B(intB, 6)), "#,0"), 13, "")
+              End If
+           Else
+              Printer.Print Space(C_LMargin + 52) & PADL(Space(1), 18, "*") & PADL("(다음장에계속)", 14, "")
+           End If
+           Printer.NewPage
+           If intPrtCntB = UBound(B, 1) Then
+              Exit For
+           Else
+              intForB = intB + 1
+              GoTo LOOP_A
+           End If
+        End If
+    Next intB
+    Erase A: Erase B
+    Printer.EndDoc
+    Screen.MousePointer = vbDefault
+    Exit Sub
+ERROR_CRYSTAL_REPORTS:
+    MsgBox Err.Number & Space(1) & Err.Description
+    Screen.MousePointer = vbDefault
+    Exit Sub
+ERROR_TABLE_SELECT:
+    MsgBox Err.Number & Err.Description & _
+           vbCr & "서버와의 연결에 실패했습니다. 프로그램을 종료합니다.", vbCritical, "입출내역 읽기 실패"
+    Unload Me
+    Exit Sub
+End Sub
+
+Private Sub SubPrint_DealBill_HEAD_1(C_TMargin As Integer, C_LMargin As Integer, _
+                                     intCurPageCnt As Integer, intTotPageCnt As Integer, _
+                                     strSaleDate As String, lngSaleNo As Long, _
+                                     strBuyerCode As String, strEnterNo As String, _
+                                     strEnterName As String, strRepName As String, _
+                                     strEnterAddress As String, curTotMny As Currency)
+Dim aryEnterNo12(12) As String
+Dim aryEnterNo24(24) As String
+Dim strEnterNo23     As String
+Dim inti             As Integer
+    
+    For inti = 1 To C_TMargin: Printer.Print "": Next inti
+    'Page
+    Printer.Print Space(C_LMargin + 2) & PADL(CStr(intCurPageCnt), 2, "") & "/" & PADL(CStr(intTotPageCnt), 2, "")
+    ' 등록번호 정렬
+    For inti = 1 To 12
+        aryEnterNo12(inti) = Mid(strEnterNo, inti, 1)
+    Next inti
+    For inti = 1 To 12
+        If inti = 1 Then
+           aryEnterNo24(inti) = aryEnterNo12(inti): aryEnterNo24(inti + 1) = " "
+        Else
+           aryEnterNo24(inti * 2 - 1) = aryEnterNo12(inti): aryEnterNo24(inti * 2) = " "
+        End If
+    Next inti
+    For inti = 1 To 23
+        strEnterNo23 = strEnterNo23 + aryEnterNo24(inti)
+    Next inti
+    '거래명세서번호, 매출일자
+    Printer.FontSize = 10
+    If Trim(PB_regUserinfoU.UserBranchName) = "(주)신세계전기" Then
+       Printer.Print Space(C_LMargin + 20) & strSaleDate _
+                   & Space(1) & "-" & Space(1) & PADR(CStr(lngSaleNo), 4, "") _
+                   & Space(38) & Mid(strSaleDate, 1, 4) _
+                   & Space(5) & Mid(strSaleDate, 5, 2) _
+                   & Space(5) & Mid(strSaleDate, 7, 2)
+    Else
+       Printer.Print Space(C_LMargin + 20) & strSaleDate _
+                   & Space(1) & "-" & Space(1) & PADR(CStr(lngSaleNo), 4, "") _
+                   & Space(40) & Mid(strSaleDate, 1, 4) _
+                   & Space(3) & Mid(strSaleDate, 5, 2) _
+                   & Space(5) & Mid(strSaleDate, 7, 2)
+    End If
+    Printer.FontSize = 2
+    Printer.Print ""
+    Printer.FontSize = 11
+    For inti = 1 To 1: Printer.Print "": Next inti
+    '등록번호
+    Printer.FontSize = 12
+    Printer.Print Space(C_LMargin + 48) & PADR(strEnterNo23, 23, "")
+    'Printer.Print Space(C_LMargin + 50) & Chr(27) & "W1" & PADC(strEnterNo, 14, "") & Chr(27) & "W0"
+    Printer.FontSize = 9
+    Printer.Print ""
+    Printer.FontSize = 2
+    Printer.Print ""
+    Printer.Print ""
+    '상호, 성명
+    Printer.FontSize = 10
+    If Trim(PB_regUserinfoU.UserBranchName) = "(주)신세계전기" Then
+       Printer.Print Space(C_LMargin + 56) & PADR(strEnterName, 20, "") & Space(3) & PADR(strRepName, 16, "")
+    Else
+       Printer.Print Space(C_LMargin + 57) & PADR(strEnterName, 20, "") & Space(3) & PADR(strRepName, 16, "")
+    End If
+    Printer.Print ""
+    '주소(작게)
+    Printer.FontSize = 2
+    Printer.Print ""
+    Printer.Print ""
+    Printer.FontSize = 9
+    If Trim(PB_regUserinfoU.UserBranchName) = "(주)신세계전기" Then
+       Printer.Print Space(C_LMargin + 63) & PADR(strEnterAddress, 70, "")
+    Else
+       Printer.Print Space(C_LMargin + 64) & PADR(strEnterAddress, 70, "")
+    End If
+    '총금액(크게)
+    Printer.FontSize = 8
+    Printer.Print "": Printer.Print ""
+    '
+    Printer.FontSize = 12
+'    Printer.Print "": Printer.Print ""
+    Printer.Print Space(C_LMargin + 22) & PADR(Format(curTotMny, "#,0"), 20, "")
+    Printer.FontSize = 10
+    For inti = 1 To 3: Printer.Print "": Next inti
+
+End Sub
+
+'+----------------------+
+'/// 세금계산서 출력 ///
+'+----------------------+
+Private Sub SubPrint_TaxBill(strBranchCode As String, strMakeYear As String, lngLogCnt1 As Long, lngLogCnt2 As Long)
+Dim strSQL               As String
+Dim P                    As Printer
+Dim strPort              As String
+Dim intFile              As Integer
+Dim blnEof               As Boolean
+Dim intPrtCnt            As Integer
+Dim strPrtLine           As String
+Dim inti                 As Integer
+Dim C_TMargin            As Integer  'Top Margin
+Dim C_LMargin            As Integer  'Left Margin
+Dim intA                 As Integer
+Dim SW_A                 As Integer
+
+Dim C_intCntPerPage      As Integer
+Dim intTotCnt            As Integer
+Dim strBuyerCode         As String   '매출처코드
+
+Dim A()                  As String   '상
+
+Dim lngR                 As Long
+Dim lngC                 As Long
+
+Dim strBookNo            As String   '세금계산서 책번호
+Dim lngSeqNo             As Long     '세금계산서 일련번호
+    
+    For Each P In Printers
+        If Trim(P.DeviceName) = Trim(cboPrinter.Text) And lstPort.List(cboPrinter.ListIndex) = P.Port Then
+           Set Printer = P
+           Exit For
+        End If
+    Next
+    Screen.MousePointer = vbHourglass
+    P_adoRec.CursorLocation = adUseClient
+    strSQL = "SELECT T1.사업장코드 AS 사업장코드, T1.작성년도 AS 작성년도, T1.책번호 AS 책번호, T1.일련번호 AS 일련번호, " _
+                  & "T1.매출처코드 AS 매출처코드, ISNULL(T2.사업자번호, '') AS 등록번호, ISNULL(T2.매출처명, '') AS 상호법인명, " _
+                  & "ISNULL(T2.대표자명, '') AS 성명, (ISNULL(T2.주소, '') + SPACE(1) + ISNULL(T2.번지, '')) AS 사업장주소, " _
+                  & "ISNULL(업태, '') AS 업태, ISNULL(업종, '') AS 종목, " _
+                  & "T1.작성일자 AS 작성일자, T1.공급가액 AS 공급가액, T1.세액 AS 세액, T1.품목및규격 AS 품목및규격, T1.수량 AS 수량, " _
+                  & "T1.금액구분 AS 금액구분, T1.영청구분 AS 영청구분, T1.미수구분 AS 미수구분 " _
+             & "FROM 세금계산서 T1 " _
+             & "LEFT JOIN 매출처 T2 ON T2.매출처코드 = T1.매출처코드 " _
+            & "WHERE T1.사업장코드 = '" & strBranchCode & "' AND T1.작성년도 = '" & strMakeYear & "' " _
+              & "AND T1.책번호 = " & lngLogCnt1 & " AND T1.일련번호 = " & lngLogCnt2 & " AND T1.사용구분 = 0 " _
+            & "ORDER BY T1.사업장코드, T1.작성년도, T1.책번호, T1.일련번호 "
+    On Error GoTo ERROR_TABLE_SELECT
+    P_adoRec.Open strSQL, PB_adoCnnSQL, adOpenStatic, adLockReadOnly
+    If P_adoRec.RecordCount = 0 Then
+       P_adoRec.Close
+       Screen.MousePointer = vbDefault
+       Exit Sub
+    Else
+       intTotCnt = P_adoRec.RecordCount
+       C_TMargin = 2
+       C_LMargin = 20
+       
+       ReDim A(intTotCnt, 23)
+       
+       Do Until P_adoRec.EOF
+          A(intA, 0) = P_adoRec("책번호")
+          A(intA, 1) = P_adoRec("일련번호")
+          A(intA, 2) = P_adoRec("매출처코드")
+          A(intA, 3) = P_adoRec("등록번호")
+          A(intA, 4) = P_adoRec("상호법인명")
+          A(intA, 5) = P_adoRec("성명")
+          A(intA, 6) = P_adoRec("사업장주소")
+          A(intA, 7) = P_adoRec("업태")
+          A(intA, 8) = P_adoRec("종목")
+          A(intA, 9) = P_adoRec("작성일자")
+          A(intA, 10) = Mid(P_adoRec("작성일자"), 5, 2)         '월
+          A(intA, 11) = Mid(P_adoRec("작성일자"), 7, 2)         '일
+          A(intA, 12) = PADR(P_adoRec("품목및규격"), 20, "") & " 외"  '품목 및 규격
+          A(intA, 13) = Format(P_adoRec("수량"), "#") & "종"    '수량
+          A(intA, 14) = ""                                      '단가
+          A(intA, 15) = P_adoRec("공급가액")                    '공급가액
+          A(intA, 16) = P_adoRec("세액")                        '세액
+          A(intA, 17) = P_adoRec("공급가액") + P_adoRec("세액") '합계금액
+          Select Case P_adoRec("금액구분")
+                 Case 0: A(intA, 18) = "O"                      '현금
+                 Case 1: A(intA, 19) = "O"                      '수표
+                 Case 2: A(intA, 20) = "O"                      '어음
+                 Case 3: A(intA, 21) = "O"                      '외상미수금
+          End Select
+          A(intA, 22) = P_adoRec("영청구분")                    '0.영수함, 1.청구함
+          intA = intA + 1
+          P_adoRec.MoveNext
+       Loop
+       P_adoRec.Close
+    End If
+    'strPort = x.Port                  '예)\\Gp202\hp 'Print On Printer
+    'strPort = "C:\Documents\세금계산서.TXT"
+    'intFile = FreeFile
+    'Open strPort For Output As #intFile
+    Printer.PaperSize = vbPRPSA4          '용지설정
+    Printer.Orientation = vbPRORPortrait  '용지방향 [ vbPRORPortrait(세로), vbPRORLandscape(가로) ]
+    Printer.FontName = "굴림체"
+    Printer.FontUnderline = False
+    Printer.FontSize = 8
+    Printer.FontBold = False
+    For intA = LBound(A, 1) To UBound(A, 1) - 1
+        '상
+        'HEAD
+        SubPrint_TaxBill_HEAD_1 C_TMargin, C_LMargin, A(intA, 0), A(intA, 1), A(intA, 3), A(intA, 4), A(intA, 5), _
+                                                      A(intA, 6), A(intA, 7), A(intA, 8), A(intA, 9), A(intA, 15), A(intA, 16)
+        'BODY
+        '10.월, 11.일, 12.품명및규격, 13.수량, 14.단가, 15.공급가액, 16.세액
+        Printer.FontSize = 10
+        Printer.Print Space(C_LMargin - 14) & A(intA, 10) & Space(1) & A(intA, 11) & Space(1) _
+                     & PADR(A(intA, 12), 35, "") & PADL(A(intA, 13), 8, "") & Space(14) _
+                     & PADL(Format(Vals(A(intA, 15)), "#,0"), 13, "") & Space(1) _
+                     & PADL(Format(Vals(A(intA, 16)), "#,0"), 13, "")
+        Printer.Print ""
+        Printer.FontSize = 2: Printer.Print "": Printer.Print ""
+        Printer.FontSize = 10
+        Printer.Print Space(C_LMargin + 30) & "--- 이 하 여 백 ---"
+        For inti = 1 To 4: Printer.Print "": Next inti
+        'FOOT(17.합계금액, 18.현금, 19.수표, 20.어음, 21.외상미수금)
+        Printer.FontSize = 10
+        If A(intA, 22) = "0" Then '영수함
+           Printer.Print ""
+           Printer.Print Space(C_LMargin - 12) & PADL(Format(Vals(A(intA, 17)), "#,0"), 14, "") & Space(2) _
+                                              & PADC(A(intA, 18), 13, "") & PADC(A(intA, 19), 13, "") _
+                                              & PADC(A(intA, 20), 13, "") & PADC(A(intA, 21), 13, "") & Space(11) & "****"
+        Else                      '청구함
+           Printer.Print Space(C_LMargin - 12) & Space(79) & "****"
+           Printer.Print Space(C_LMargin - 12) & PADL(Format(Vals(A(intA, 17)), "#,0"), 14, "") & Space(2) _
+                                               & PADC(A(intA, 18), 13, "") & PADC(A(intA, 19), 13, "") _
+                                               & PADC(A(intA, 20), 13, "") & PADC(A(intA, 21), 13, "")
+        End If
+        Printer.FontSize = 7
+        For inti = 1 To 3: Printer.Print "": Next inti
+        Printer.FontSize = 2: Printer.Print ""
+        '하
+        'HEAD
+        SubPrint_TaxBill_HEAD_1 C_TMargin, C_LMargin, A(intA, 0), A(intA, 1), A(intA, 3), A(intA, 4), A(intA, 5), _
+                                                      A(intA, 6), A(intA, 7), A(intA, 8), A(intA, 9), A(intA, 15), A(intA, 16)
+        'BODY
+        '10.월, 11.일, 12.품명및규격, 13.수량, 14.단가, 15.공급가액, 16.세액
+        Printer.FontSize = 10
+        Printer.Print Space(C_LMargin - 14) & A(intA, 10) & Space(1) & A(intA, 11) & Space(1) _
+                     & PADR(A(intA, 12), 35, "") & PADL(A(intA, 13), 8, "") & Space(14) _
+                     & PADL(Format(Vals(A(intA, 15)), "#,0"), 13, "") & Space(1) _
+                     & PADL(Format(Vals(A(intA, 16)), "#,0"), 13, "")
+        Printer.Print ""
+        Printer.FontSize = 2: Printer.Print "": Printer.Print ""
+        Printer.FontSize = 10
+        Printer.Print Space(C_LMargin + 30) & "--- 이 하 여 백 ---"
+        For inti = 1 To 4: Printer.Print "": Next inti
+        'FOOT(17.합계금액, 18.현금, 19.수표, 20.어음, 21.외상미수금)
+        Printer.FontSize = 10
+        If A(intA, 22) = "0" Then '영수함
+           Printer.Print ""
+           Printer.Print Space(C_LMargin - 12) & PADL(Format(Vals(A(intA, 17)), "#,0"), 14, "") & Space(2) _
+                                               & PADC(A(intA, 18), 13, "") & PADC(A(intA, 19), 13, "") _
+                                               & PADC(A(intA, 20), 13, "") & PADC(A(intA, 21), 13, "") & Space(11) & "****"
+        Else                      '청구함
+           Printer.Print Space(C_LMargin - 12) & Space(79) & "****"
+           Printer.Print Space(C_LMargin - 12) & PADL(Format(Vals(A(intA, 17)), "#,0"), 14, "") & Space(2) _
+                                               & PADC(A(intA, 18), 13, "") & PADC(A(intA, 19), 13, "") _
+                                               & PADC(A(intA, 20), 13, "") & PADC(A(intA, 21), 13, "")
+        End If
+        Printer.NewPage
+    Next intA
+    Erase A
+    Printer.EndDoc
+    Screen.MousePointer = vbDefault
+    Exit Sub
+ERROR_CRYSTAL_REPORTS:
+    MsgBox Err.Number & Space(1) & Err.Description
+    Screen.MousePointer = vbDefault
+    Exit Sub
+ERROR_TABLE_SELECT:
+    MsgBox Err.Number & Err.Description & _
+           vbCr & "서버와의 연결에 실패했습니다. 프로그램을 종료합니다.", vbCritical, "입출내역 읽기 실패"
+    Unload Me
+    Exit Sub
+End Sub
+
+Private Sub SubPrint_TaxBill_HEAD_1(C_TMargin As Integer, C_LMargin As Integer, _
+                                    A0 As String, A1 As String, _
+                                    A3 As String, A4 As String, A5 As String, _
+                                    A6 As String, A7 As String, A8 As String, _
+                                    A9 As String, A15 As String, A16 As String)
+Dim aryEnterNo12(12) As String
+Dim aryEnterNo24(24) As String
+Dim strEnterNo23     As String
+Dim inti             As Integer
+Dim intBlankCnt      As Integer '공란수
+Dim aryMny1_11(11)   As String  '공급가액
+Dim aryMny1_22(22)   As String
+Dim strMny1_21       As String
+Dim aryMny2_11(11)   As String  '세액
+Dim aryMny2_22(22)   As String
+Dim strMny2_21       As String
+    Printer.FontSize = 10
+    'A0.책번호, A1.일련번호, A3.등록번호, A4.상호, A5.성명, A6.주소, A7.업태, A8.종목, A9.거래일자, A15.공급가액, A16.세액
+    'For inti = 1 To C_TMargin: Printer.Print "": Next inti
+    '등록번호 정렬
+    For inti = 1 To 12
+        aryEnterNo12(inti) = Mid(A3, inti, 1)
+    Next inti
+    For inti = 1 To 12
+        If inti = 1 Then
+           aryEnterNo24(inti) = aryEnterNo12(inti): aryEnterNo24(inti + 1) = " "
+        Else
+           aryEnterNo24(inti * 2 - 1) = aryEnterNo12(inti): aryEnterNo24(inti * 2) = " "
+        End If
+    Next inti
+    For inti = 1 To 23
+        strEnterNo23 = strEnterNo23 + aryEnterNo24(inti)
+    Next inti
+    Printer.FontSize = 8
+    For inti = 1 To 3: Printer.Print "": Next inti
+    Printer.FontSize = 2: Printer.Print ""
+    '책번호
+    Printer.FontSize = 10
+    Printer.Print ""                                      '세금계산서번호 출력(X)
+    'Printer.Print Space(C_LMargin + 64) & PADR(A0, 6, "") '세금계산번호 출력(O)
+    '일련번호
+    Printer.Print ""                                      '세금계산서번호 출력(X)
+    'Printer.Print Space(C_LMargin + 64) & PADR(A1, 6, "") '세금계산번호 출력(O)
+    '등록번호
+    Printer.FontSize = 12
+    For inti = 1 To 1: Printer.Print "": Next inti
+    Printer.Print Space(C_LMargin + 32) & PADR(strEnterNo23, 23, "")
+    For inti = 1 To 1: Printer.Print "": Next inti
+    'Printer.Print Space(C_LMargin + 50) & Chr(27) & "W1" & PADC(strEnterNo, 14, "") & Chr(27) & "W0"
+    '상호, 성명
+    Printer.FontSize = 2: Printer.Print "": Printer.Print "": Printer.Print ""
+    Printer.FontSize = 12
+    Printer.Print Space(C_LMargin + 30) & PADR(A4, 20, "") & Space(2) & PADR(A5, 16, "")
+    '주소(작게)
+    Printer.FontSize = 10: Printer.Print "": Printer.Print ""
+    Printer.FontSize = 2: Printer.Print "": Printer.Print ""
+    Printer.FontSize = 10
+    Printer.Print Space(C_LMargin + 40) & PADR(A6, 70, "")
+    For inti = 1 To 2: Printer.Print "": Next inti
+    '업태, 종목(작게)
+    Printer.FontSize = 2: Printer.Print ""
+    Printer.FontSize = 8
+    Printer.Print Space(C_LMargin + 54) & PADR(A7, 14, "") & Space(7) & PADR(A8, 14, "")
+    For inti = 1 To 3: Printer.Print "": Next inti
+    '작성년월일, 공란수, 공급가액, 세액
+    '공급가액 정렬
+    For inti = 1 To 11
+        aryMny1_11(inti) = Mid(A15, inti, 1)
+    Next inti
+    For inti = 1 To 11
+        If inti = 1 Then
+           aryMny1_22(inti) = aryMny1_11(inti): aryMny1_22(inti + 1) = " "
+        Else
+           aryMny1_22(inti * 2 - 1) = aryMny1_11(inti): aryMny1_22(inti * 2) = " "
+        End If
+    Next inti
+    For inti = 1 To 21
+        strMny1_21 = strMny1_21 + aryMny1_22(inti)
+    Next inti
+    '세액 정렬
+    For inti = 1 To 11
+        aryMny2_11(inti) = Mid(A16, inti, 1)
+    Next inti
+    For inti = 1 To 11
+        If inti = 1 Then
+           aryMny2_22(inti) = aryMny2_11(inti): aryMny2_22(inti + 1) = " "
+        Else
+           aryMny2_22(inti * 2 - 1) = aryMny2_11(inti): aryMny2_22(inti * 2) = " "
+        End If
+    Next inti
+    For inti = 1 To 21
+        strMny2_21 = strMny2_21 + aryMny2_22(inti)
+    Next inti
+    Printer.FontSize = 8
+    For inti = 1 To 2: Printer.Print "": Next inti
+    intBlankCnt = 11 - Len(Trim(A15))
+    Printer.FontSize = 12
+    Printer.Print Space(C_LMargin - 14) & Mid(A9, 1, 4) & Space(1) & Mid(A9, 5, 2) & Mid(A9, 7, 2) _
+                      & " " & PADC(intBlankCnt, 3, "") & PADL(strMny1_21, 22, "") & PADL(strMny2_21, 20, "")
+    Printer.FontSize = 8
+    For inti = 1 To 3: Printer.Print "": Next inti
+End Sub
+

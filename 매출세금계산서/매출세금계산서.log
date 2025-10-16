@@ -1,0 +1,6 @@
+67 행: cmdPrint의 Picture 속성에 잘못된 파일 참조가 있습니다.
+89 행: cmdClear의 Picture 속성에 잘못된 파일 참조가 있습니다.
+98 행: cmdExit의 Picture 속성에 잘못된 파일 참조가 있습니다.
+107 행: cmdDelete의 Picture 속성에 잘못된 파일 참조가 있습니다.
+116 행: cmdSave의 Picture 속성에 잘못된 파일 참조가 있습니다.
+125 행: cmdFind의 Picture 속성에 잘못된 파일 참조가 있습니다.

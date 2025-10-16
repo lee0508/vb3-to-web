@@ -1,0 +1,378 @@
+[Root]
+Most Recent Package=Standard Setup Package 1
+
+
+[Package|Standard Setup Package 1|자재관리]
+Icon1=자재관리.exe
+Title1=자재관리
+StartIn1=$(AppPath)
+Key1=Icon1
+
+[Package|Standard Setup Package 1|Root]
+SubWizProgID=PDWizard.SetupPkgSubWiz
+BuildFolder=C:\YmhPrgW\Package2003
+
+[Package|Standard Setup Package 1|Configure DAO ISAMs]
+Applicable=No
+
+[Package|Standard Setup Package 1|Configure DAO ODBC]
+JetWorkspace=
+ODBCDirect=
+
+[Package|Standard Setup Package 1|Files Found]
+
+[Package|Standard Setup Package 1|Files Released]
+u2LBAR.DLL=
+u25TOTAL.DLL=
+u25STORE.DLL=
+Crystal=
+자재시세.rpt=
+
+[Package|Standard Setup Package 1|Missing Dependency Information]
+C:\WINDOWS\system32\Vsflex7.ocx=
+C:\Program Files\Common Files\System\ado\msado21.tlb=
+
+[Package|Standard Setup Package 1|Out-of-Date Dependency Information]
+C:\WINDOWS\system32\MSCOMCTL.OCX=
+
+[Package|Standard Setup Package 1|Files Added]
+c:\ymhprgw\execution\견적서.rpt=
+c:\ymhprgw\execution\계정코드관리보고서.rpt=
+c:\ymhprgw\execution\매입세금계산서장부현황.rpt=
+c:\ymhprgw\execution\매입처보조부.rpt=
+c:\ymhprgw\execution\매입처정보.rpt=
+c:\ymhprgw\execution\매출세금계산서장부현황.rpt=
+c:\ymhprgw\execution\매출세금계산서현황.rpt=
+c:\ymhprgw\execution\매출처보조부.rpt=
+c:\ymhprgw\execution\매출처정보.rpt=
+c:\ymhprgw\execution\미달상품내역.rpt=
+c:\ymhprgw\execution\미수금원장.rpt=
+c:\ymhprgw\execution\미지급금원장.rpt=
+c:\ymhprgw\execution\반입내역(업체별).rpt=
+c:\ymhprgw\execution\반입내역(일자별).rpt=
+c:\ymhprgw\execution\반품내역(업체별).rpt=
+c:\ymhprgw\execution\반품내역(일자별).rpt=
+c:\ymhprgw\execution\발주서.rpt=
+c:\ymhprgw\execution\수불부.rpt=
+c:\ymhprgw\execution\업체별매입현황(3개월간).rpt=
+c:\ymhprgw\execution\업체별매입현황(일자별).rpt=
+c:\ymhprgw\execution\업체별매입현황(품목별).rpt=
+c:\ymhprgw\execution\업체별매입현황.rpt=
+c:\ymhprgw\execution\업체별매출현황(3개월간).rpt=
+c:\ymhprgw\execution\업체별매출현황(일자별).rpt=
+c:\ymhprgw\execution\업체별매출현황(품목별).rpt=
+c:\ymhprgw\execution\업체별매출현황.rpt=
+c:\ymhprgw\execution\업체별미수금현황(집계표).rpt=
+c:\ymhprgw\execution\업체별미지급금현황(집계표).rpt=
+c:\ymhprgw\execution\업체별수금현황(일자별).rpt=
+c:\ymhprgw\execution\업체별지급현황(일자별).rpt=
+c:\ymhprgw\execution\일계표.rpt=
+c:\ymhprgw\execution\자재원장.rpt=
+c:\ymhprgw\execution\자재정보.rpt=
+c:\ymhprgw\execution\재고조정내역.rpt=
+c:\ymhprgw\execution\제경비내역(일자별).rpt=
+c:\ymhprgw\execution\출납관리(계정과목별).rpt=
+c:\ymhprgw\execution\출납관리(계정별집계).rpt=
+c:\ymhprgw\execution\출납관리(일자별).rpt=
+c:\ymhprgw\execution\품목별매입현황.rpt=
+c:\ymhprgw\execution\품목별매출현황.rpt=
+c:\ymhprgw\execution\합계시산표.rpt=
+
+[Package|Standard Setup Package 1|Files Removed]
+
+[Package|Standard Setup Package 1|Files In Project]
+C:\WINDOWS\system32\msvbvm60.dll=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEAUT32.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEPRO32.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\ASYCFILT.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\STDOLE2.TLB=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=Yes
+C:\WINDOWS\system32\VB6KO.DLL=Yes
+C:\Program Files\Common Files\System\ado\msado21.tlb=Yes
+C:\WINDOWS\system32\Vsflex7.ocx=Yes
+C:\WINDOWS\system32\MSSTDFMT.DLL=Yes
+C:\WINDOWS\system32\STDFTKO.DLL=Yes
+C:\WINDOWS\system32\MSCOMCTL.OCX=Yes
+C:\WINDOWS\system32\MSCMCKO.DLL=Yes
+C:\WINDOWS\system32\Crystl32.OCX=Yes
+C:\WINDOWS\system32\crpe32.dll=Yes
+C:\WINDOWS\system32\Implode.dll=Yes
+C:\WINDOWS\system32\Crpaig80.dll=Yes
+C:\WINDOWS\system32\mfc42.dll=Yes
+C:\WINDOWS\Crystal\Crxlat32.dll=Yes
+C:\WINDOWS\Crystal\p2bbde.dll=Yes
+C:\WINDOWS\system32\P2bbnd.dll=Yes
+C:\WINDOWS\system32\p2bdao.dll=Yes
+C:\WINDOWS\Crystal\p2bxbse.dll=Yes
+C:\WINDOWS\system32\p2ctdao.dll=Yes
+C:\WINDOWS\system32\p2irdao.dll=Yes
+C:\WINDOWS\Crystal\p2sifmx.dll=Yes
+C:\WINDOWS\system32\P2smon.dll=Yes
+C:\WINDOWS\system32\p2sodbc.dll=Yes
+C:\WINDOWS\Crystal\p2sora7.dll=Yes
+C:\WINDOWS\Crystal\p2ssql.dll=Yes
+C:\WINDOWS\Crystal\p2ssyb10.dll=Yes
+C:\WINDOWS\Crystal\p2soledb.dll=Yes
+C:\WINDOWS\Crystal\u2ddisk.dll=Yes
+C:\WINDOWS\Crystal\u2dmapi.dll=Yes
+C:\WINDOWS\Crystal\u2dnotes.dll=Yes
+C:\WINDOWS\Crystal\u2dpost.dll=Yes
+C:\WINDOWS\Crystal\u2dvim.dll=Yes
+C:\WINDOWS\Crystal\u2dapp.dll=Yes
+C:\WINDOWS\Crystal\u2fcr.dll=Yes
+C:\WINDOWS\Crystal\u2fhtml.dll=Yes
+C:\WINDOWS\Crystal\u2fodbc.dll=Yes
+C:\WINDOWS\Crystal\u2frec.dll=Yes
+C:\WINDOWS\Crystal\u2frtf.dll=Yes
+C:\WINDOWS\Crystal\u2fsepv.dll=Yes
+C:\WINDOWS\Crystal\u2ftext.dll=Yes
+C:\WINDOWS\Crystal\u2fwks.dll=Yes
+C:\WINDOWS\Crystal\u2fwordw.dll=Yes
+C:\WINDOWS\Crystal\u2fxls.dll=Yes
+C:\WINDOWS\Crystal\u25dts.dll=Yes
+C:\WINDOWS\Crystal\u2l2000.dll=Yes
+C:\WINDOWS\Crystal\u2lcom.dll=Yes
+C:\WINDOWS\Crystal\u2ldts.dll=Yes
+C:\WINDOWS\Crystal\u2lsamp1.dll=Yes
+C:\WINDOWS\Crystal\u252000.dll=Yes
+\program files\seagate software\shared\SSCSDK80.DLL=Yes
+C:\WINDOWS\system32\MSCOMCT2.OCX=Yes
+C:\WINDOWS\system32\MSCC2KO.DLL=Yes
+C:\WINDOWS\system32\RICHTX32.OCX=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\RICHED32.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\GAPI32.DLL=Yes
+C:\WINDOWS\system32\RCHTXKO.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP.EXE=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP1.EXE=Yes
+C:\WINDOWS\system32\VB6STKIT.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\ST6UNST.EXE=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\MSVCRT.DLL=Yes
+C:\YmhPrgW\Execution\판매관리시스템.exe=Yes
+C:\YmhPrgW\Execution\견적서.rpt=Yes
+C:\YmhPrgW\Execution\계정코드관리보고서.rpt=Yes
+C:\YmhPrgW\Execution\매입세금계산서장부현황.rpt=Yes
+C:\YmhPrgW\Execution\매입처보조부.rpt=Yes
+C:\YmhPrgW\Execution\매입처정보.rpt=Yes
+C:\YmhPrgW\Execution\매출세금계산서장부현황.rpt=Yes
+C:\YmhPrgW\Execution\매출세금계산서현황.rpt=Yes
+C:\YmhPrgW\Execution\매출처보조부.rpt=Yes
+C:\YmhPrgW\Execution\매출처정보.rpt=Yes
+C:\YmhPrgW\Execution\미달상품내역.rpt=Yes
+C:\YmhPrgW\Execution\미수금원장.rpt=Yes
+C:\YmhPrgW\Execution\미지급금원장.rpt=Yes
+C:\YmhPrgW\Execution\반입내역(업체별).rpt=Yes
+C:\YmhPrgW\Execution\반입내역(일자별).rpt=Yes
+C:\YmhPrgW\Execution\반품내역(업체별).rpt=Yes
+C:\YmhPrgW\Execution\반품내역(일자별).rpt=Yes
+C:\YmhPrgW\Execution\발주서.rpt=Yes
+C:\YmhPrgW\Execution\수불부.rpt=Yes
+C:\YmhPrgW\Execution\업체별매입현황(3개월간).rpt=Yes
+C:\YmhPrgW\Execution\업체별매입현황(일자별).rpt=Yes
+C:\YmhPrgW\Execution\업체별매입현황(품목별).rpt=Yes
+C:\YmhPrgW\Execution\업체별매입현황.rpt=Yes
+C:\YmhPrgW\Execution\업체별매출현황(3개월간).rpt=Yes
+C:\YmhPrgW\Execution\업체별매출현황(일자별).rpt=Yes
+C:\YmhPrgW\Execution\업체별매출현황(품목별).rpt=Yes
+C:\YmhPrgW\Execution\업체별매출현황.rpt=Yes
+C:\YmhPrgW\Execution\업체별미수금현황(집계표).rpt=Yes
+C:\YmhPrgW\Execution\업체별미지급금현황(집계표).rpt=Yes
+C:\YmhPrgW\Execution\업체별수금현황(일자별).rpt=Yes
+C:\YmhPrgW\Execution\업체별지급현황(일자별).rpt=Yes
+C:\YmhPrgW\Execution\일계표.rpt=Yes
+C:\YmhPrgW\Execution\자재원장.rpt=Yes
+C:\YmhPrgW\Execution\자재정보.rpt=Yes
+C:\YmhPrgW\Execution\재고조정내역.rpt=Yes
+C:\YmhPrgW\Execution\제경비내역(일자별).rpt=Yes
+C:\YmhPrgW\Execution\출납관리(계정과목별).rpt=Yes
+C:\YmhPrgW\Execution\출납관리(계정별집계).rpt=Yes
+C:\YmhPrgW\Execution\출납관리(일자별).rpt=Yes
+C:\YmhPrgW\Execution\품목별매입현황.rpt=Yes
+C:\YmhPrgW\Execution\품목별매출현황.rpt=Yes
+C:\YmhPrgW\Execution\합계시산표.rpt=Yes
+
+[Package|Standard Setup Package 1|Configure Registry Files]
+Applicable=No
+
+[Package|Standard Setup Package 1|Configure Remote Servers]
+Applicable=No
+
+[Package|Standard Setup Package 1|Install Locations]
+C:\YmhPrgW\Execution\자재관리.exe=$(AppPath)
+C:\WINDOWS\system32\msvbvm60.dll=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEAUT32.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEPRO32.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\ASYCFILT.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\STDOLE2.TLB=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=$(WinSysPathSysFile)
+C:\WINDOWS\system32\VB6KO.DLL=$(WinSysPath)
+C:\Program Files\Common Files\System\ado\msado21.tlb=$(WinSysPath)
+C:\WINDOWS\system32\Vsflex7.ocx=$(WinSysPath)
+C:\WINDOWS\system32\MSSTDFMT.DLL=$(WinSysPath)
+C:\WINDOWS\system32\STDFTKO.DLL=$(WinSysPath)
+C:\WINDOWS\system32\MSCOMCTL.OCX=$(WinSysPath)
+C:\WINDOWS\system32\MSCMCKO.DLL=$(WinSysPath)
+C:\WINDOWS\system32\Crystl32.OCX=$(WinSysPath)
+C:\WINDOWS\system32\crpe32.dll=$(WinSysPath)
+C:\WINDOWS\system32\Implode.dll=$(AppPath)
+C:\WINDOWS\system32\Crpaig80.dll=$(WinSysPath)
+C:\WINDOWS\system32\msvcrt.dll=$(WinSysPath)
+C:\WINDOWS\system32\mfc42.dll=$(WinSysPath)
+C:\WINDOWS\Crystal\Crxlat32.dll=$(WinSysPath)
+C:\WINDOWS\Crystal\p2bbde.dll=$(WinSysPath)
+C:\WINDOWS\system32\P2bbnd.dll=$(WinSysPath)
+C:\WINDOWS\system32\p2bdao.dll=$(WinSysPath)
+C:\WINDOWS\Crystal\p2bxbse.dll=$(WinSysPath)
+C:\WINDOWS\system32\p2ctdao.dll=$(WinSysPath)
+C:\WINDOWS\system32\p2irdao.dll=$(WinSysPath)
+C:\WINDOWS\Crystal\p2sifmx.dll=$(WinSysPath)
+C:\WINDOWS\system32\P2smon.dll=$(WinSysPath)
+C:\WINDOWS\system32\p2sodbc.dll=$(WinSysPath)
+C:\WINDOWS\Crystal\p2sora7.dll=$(WinSysPath)
+C:\WINDOWS\Crystal\p2ssql.dll=$(WinSysPath)
+C:\WINDOWS\Crystal\p2ssyb10.dll=$(WinSysPath)
+C:\WINDOWS\Crystal\p2soledb.dll=$(WinSysPath)
+C:\WINDOWS\Crystal\u2ddisk.dll=$(WinSysPath)
+C:\WINDOWS\Crystal\u2dmapi.dll=$(WinSysPath)
+C:\WINDOWS\Crystal\u2dnotes.dll=$(WinSysPath)
+C:\WINDOWS\Crystal\u2dpost.dll=$(WinSysPath)
+C:\WINDOWS\Crystal\u2dvim.dll=$(WinSysPath)
+C:\WINDOWS\Crystal\u2dapp.dll=$(WinSysPath)
+C:\WINDOWS\Crystal\u2fcr.dll=$(WinSysPath)
+C:\WINDOWS\Crystal\u2fhtml.dll=$(WinSysPath)
+C:\WINDOWS\Crystal\u2fodbc.dll=$(WinSysPath)
+C:\WINDOWS\Crystal\u2frec.dll=$(WinSysPath)
+C:\WINDOWS\Crystal\u2frtf.dll=$(WinSysPath)
+C:\WINDOWS\Crystal\u2fsepv.dll=$(WinSysPath)
+C:\WINDOWS\Crystal\u2ftext.dll=$(WinSysPath)
+C:\WINDOWS\Crystal\u2fwks.dll=$(WinSysPath)
+C:\WINDOWS\Crystal\u2fwordw.dll=$(WinSysPath)
+C:\WINDOWS\Crystal\u2fxls.dll=$(WinSysPath)
+C:\WINDOWS\Crystal\u25dts.dll=$(WinSysPath)
+C:\WINDOWS\Crystal\u2l2000.dll=$(WinSysPath)
+C:\WINDOWS\Crystal\u2lcom.dll=$(WinSysPath)
+C:\WINDOWS\Crystal\u2ldts.dll=$(WinSysPath)
+C:\WINDOWS\Crystal\u2lsamp1.dll=$(WinSysPath)
+C:\WINDOWS\Crystal\u252000.dll=$(WinSysPath)
+\program files\seagate software\shared\SSCSDK80.DLL=$(WinSysPath)
+C:\WINDOWS\system32\MSCOMCT2.OCX=$(WinSysPath)
+C:\WINDOWS\system32\MSCC2KO.DLL=$(WinSysPath)
+C:\WINDOWS\system32\RICHTX32.OCX=$(WinSysPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\RICHED32.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\GAPI32.DLL=$(WinSysPathSysFile)
+C:\WINDOWS\system32\RCHTXKO.DLL=$(WinSysPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP.EXE=$(AppPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP1.EXE=$(WinPath)
+C:\WINDOWS\system32\VB6STKIT.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\ST6UNST.EXE=$(WinPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\MSVCRT.DLL=$(WinSysPath)
+C:\YmhPrgW\Execution\판매관리시스템.exe=$(AppPath)
+C:\YmhPrgW\Execution\견적서.rpt=$(AppPath)
+C:\YmhPrgW\Execution\계정코드관리보고서.rpt=$(AppPath)
+C:\YmhPrgW\Execution\매입세금계산서장부현황.rpt=$(AppPath)
+C:\YmhPrgW\Execution\매입처보조부.rpt=$(AppPath)
+C:\YmhPrgW\Execution\매입처정보.rpt=$(AppPath)
+C:\YmhPrgW\Execution\매출세금계산서장부현황.rpt=$(AppPath)
+C:\YmhPrgW\Execution\매출세금계산서현황.rpt=$(AppPath)
+C:\YmhPrgW\Execution\매출처보조부.rpt=$(AppPath)
+C:\YmhPrgW\Execution\매출처정보.rpt=$(AppPath)
+C:\YmhPrgW\Execution\미달상품내역.rpt=$(AppPath)
+C:\YmhPrgW\Execution\미수금원장.rpt=$(AppPath)
+C:\YmhPrgW\Execution\미지급금원장.rpt=$(AppPath)
+C:\YmhPrgW\Execution\반입내역(업체별).rpt=$(AppPath)
+C:\YmhPrgW\Execution\반입내역(일자별).rpt=$(AppPath)
+C:\YmhPrgW\Execution\반품내역(업체별).rpt=$(AppPath)
+C:\YmhPrgW\Execution\반품내역(일자별).rpt=$(AppPath)
+C:\YmhPrgW\Execution\발주서.rpt=$(AppPath)
+C:\YmhPrgW\Execution\수불부.rpt=$(AppPath)
+C:\YmhPrgW\Execution\업체별매입현황(3개월간).rpt=$(AppPath)
+C:\YmhPrgW\Execution\업체별매입현황(일자별).rpt=$(AppPath)
+C:\YmhPrgW\Execution\업체별매입현황(품목별).rpt=$(AppPath)
+C:\YmhPrgW\Execution\업체별매입현황.rpt=$(AppPath)
+C:\YmhPrgW\Execution\업체별매출현황(3개월간).rpt=$(AppPath)
+C:\YmhPrgW\Execution\업체별매출현황(일자별).rpt=$(AppPath)
+C:\YmhPrgW\Execution\업체별매출현황(품목별).rpt=$(AppPath)
+C:\YmhPrgW\Execution\업체별매출현황.rpt=$(AppPath)
+C:\YmhPrgW\Execution\업체별미수금현황(집계표).rpt=$(AppPath)
+C:\YmhPrgW\Execution\업체별미지급금현황(집계표).rpt=$(AppPath)
+C:\YmhPrgW\Execution\업체별수금현황(일자별).rpt=$(AppPath)
+C:\YmhPrgW\Execution\업체별지급현황(일자별).rpt=$(AppPath)
+C:\YmhPrgW\Execution\일계표.rpt=$(AppPath)
+C:\YmhPrgW\Execution\자재시세.rpt=$(AppPath)
+C:\YmhPrgW\Execution\자재원장.rpt=$(AppPath)
+C:\YmhPrgW\Execution\자재정보.rpt=$(AppPath)
+C:\YmhPrgW\Execution\재고조정내역.rpt=$(AppPath)
+C:\YmhPrgW\Execution\제경비내역(일자별).rpt=$(AppPath)
+C:\YmhPrgW\Execution\출납관리(계정과목별).rpt=$(AppPath)
+C:\YmhPrgW\Execution\출납관리(계정별집계).rpt=$(AppPath)
+C:\YmhPrgW\Execution\출납관리(일자별).rpt=$(AppPath)
+C:\YmhPrgW\Execution\품목별매입현황.rpt=$(AppPath)
+C:\YmhPrgW\Execution\품목별매출현황.rpt=$(AppPath)
+C:\YmhPrgW\Execution\합계시산표.rpt=$(AppPath)
+
+[Package|Standard Setup Package 1|Configure Shared Files]
+Applicable=Yes
+C:\YmhPrgW\Execution\자재관리.exe=Yes
+C:\WINDOWS\system32\Implode.dll=Yes
+C:\YmhPrgW\Execution\판매관리시스템.exe=Yes
+C:\YmhPrgW\Execution\견적서.rpt=Yes
+C:\YmhPrgW\Execution\계정코드관리보고서.rpt=Yes
+C:\YmhPrgW\Execution\매입세금계산서장부현황.rpt=Yes
+C:\YmhPrgW\Execution\매입처보조부.rpt=Yes
+C:\YmhPrgW\Execution\매입처정보.rpt=Yes
+C:\YmhPrgW\Execution\매출세금계산서장부현황.rpt=Yes
+C:\YmhPrgW\Execution\매출세금계산서현황.rpt=Yes
+C:\YmhPrgW\Execution\매출처보조부.rpt=Yes
+C:\YmhPrgW\Execution\매출처정보.rpt=Yes
+C:\YmhPrgW\Execution\미달상품내역.rpt=Yes
+C:\YmhPrgW\Execution\미수금원장.rpt=Yes
+C:\YmhPrgW\Execution\미지급금원장.rpt=Yes
+C:\YmhPrgW\Execution\반입내역(업체별).rpt=Yes
+C:\YmhPrgW\Execution\반입내역(일자별).rpt=Yes
+C:\YmhPrgW\Execution\반품내역(업체별).rpt=Yes
+C:\YmhPrgW\Execution\반품내역(일자별).rpt=Yes
+C:\YmhPrgW\Execution\발주서.rpt=Yes
+C:\YmhPrgW\Execution\수불부.rpt=Yes
+C:\YmhPrgW\Execution\업체별매입현황(3개월간).rpt=Yes
+C:\YmhPrgW\Execution\업체별매입현황(일자별).rpt=Yes
+C:\YmhPrgW\Execution\업체별매입현황(품목별).rpt=Yes
+C:\YmhPrgW\Execution\업체별매입현황.rpt=Yes
+C:\YmhPrgW\Execution\업체별매출현황(3개월간).rpt=Yes
+C:\YmhPrgW\Execution\업체별매출현황(일자별).rpt=Yes
+C:\YmhPrgW\Execution\업체별매출현황(품목별).rpt=Yes
+C:\YmhPrgW\Execution\업체별매출현황.rpt=Yes
+C:\YmhPrgW\Execution\업체별미수금현황(집계표).rpt=Yes
+C:\YmhPrgW\Execution\업체별미지급금현황(집계표).rpt=Yes
+C:\YmhPrgW\Execution\업체별수금현황(일자별).rpt=Yes
+C:\YmhPrgW\Execution\업체별지급현황(일자별).rpt=Yes
+C:\YmhPrgW\Execution\일계표.rpt=Yes
+C:\YmhPrgW\Execution\자재시세.rpt=Yes
+C:\YmhPrgW\Execution\자재원장.rpt=Yes
+C:\YmhPrgW\Execution\자재정보.rpt=Yes
+C:\YmhPrgW\Execution\재고조정내역.rpt=Yes
+C:\YmhPrgW\Execution\제경비내역(일자별).rpt=Yes
+C:\YmhPrgW\Execution\출납관리(계정과목별).rpt=Yes
+C:\YmhPrgW\Execution\출납관리(계정별집계).rpt=Yes
+C:\YmhPrgW\Execution\출납관리(일자별).rpt=Yes
+C:\YmhPrgW\Execution\품목별매입현황.rpt=Yes
+C:\YmhPrgW\Execution\품목별매출현황.rpt=Yes
+C:\YmhPrgW\Execution\합계시산표.rpt=Yes
+
+[Package|Standard Setup Package 1|Distribution]
+Type=single
+Size=1.44 MB
+Title=판매관리시스템
+
+[Package|Standard Setup Package 1|Package]
+PackageFolder=C:\YmhPrgW\Package2003
+ProjectFolder=C:\YmhPrgW\Source
+ServerSideCab=
+File1=C:\YmhPrgW\Package2003\setup.exe
+File2=C:\YmhPrgW\Package2003\Setup.Lst
+File3=C:\YmhPrgW\Package2003\판매관리시스템.CAB
+Handler1=PDWizard.FolderDplySubWiz
+Handler2=PDWizard.WebPostDplySubWiz
+
+[Package|Standard Setup Package 1|IconGroups]
+Group0=판매관리시스템
+PrivateGroup0=0
+Parent0=$(Programs)
