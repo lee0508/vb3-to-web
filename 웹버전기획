@@ -1,0 +1,166 @@
+# 판매관리 시스템 웹 버전 프로젝트 구조
+
+## 📁 디렉토리 구조
+
+```
+sales-management-web/
+│
+├── index.php                  # 메인 진입점
+├── config/
+│   ├── database.php          # DB 연결 설정
+│   └── constants.php         # 상수 정의
+│
+├── includes/
+│   ├── header.php            # 공통 헤더
+│   ├── footer.php            # 공통 푸터
+│   ├── navigation.php        # 메뉴 네비게이션
+│   └── session.php           # 세션 관리
+│
+├── modules/
+│   ├── auth/                 # 인증 모듈
+│   │   ├── login.php
+│   │   ├── logout.php
+│   │   └── check_auth.php
+│   │
+│   ├── master/               # 기초자료관리
+│   │   ├── customer.php      # 거래처관리
+│   │   ├── employee.php      # 사원관리
+│   │   ├── product.php       # 제품관리
+│   │   └── category.php      # 분류관리
+│   │
+│   ├── sales/                # 매출관리
+│   │   ├── order_form.php    # 매출전표입력
+│   │   ├── order_list.php    # 매출전표조회
+│   │   ├── quote.php         # 견적서
+│   │   └── sales_stats.php   # 매출통계
+│   │
+│   ├── purchase/             # 매입관리
+│   │   ├── purchase_form.php # 매입전표입력
+│   │   ├── purchase_list.php # 매입전표조회
+│   │   └── order_form.php    # 발주서
+│   │
+│   ├── payment/              # 거래처리(입출금)
+│   │   ├── receive.php       # 입금관리
+│   │   ├── pay.php           # 출금관리
+│   │   └── balance.php       # 잔액조회
+│   │
+│   ├── inventory/            # 재고관리
+│   │   ├── stock_list.php    # 재고조회
+│   │   ├── movement.php      # 재고이동
+│   │   └── adjustment.php    # 재고조정
+│   │
+│   ├── accounting/           # 회계관리
+│   │   ├── year_end.php      # 연말정산
+│   │   └── fund_mgmt.php     # 자금관리
+│   │
+│   └── statistics/           # 통계분석
+│       ├── sales_report.php  # 매출통계
+│       └── purchase_report.php # 매입통계
+│
+├── api/                      # AJAX API 엔드포인트
+│   ├── customers.php
+│   ├── products.php
+│   ├── sales.php
+│   └── inventory.php
+│
+├── assets/
+│   ├── css/
+│   │   ├── bootstrap.min.css
+│   │   ├── custom.css        # 커스텀 스타일
+│   │   └── responsive.css    # 반응형 스타일
+│   │
+│   ├── js/
+│   │   ├── jquery.min.js
+│   │   ├── bootstrap.min.js
+│   │   ├── common.js         # 공통 함수
+│   │   └── validation.js     # 입력 검증
+│   │
+│   └── images/
+│       └── logo.png
+│
+├── classes/                  # PHP 클래스
+│   ├── Database.php          # DB 연결 클래스
+│   ├── User.php              # 사용자 클래스
+│   ├── Customer.php          # 거래처 클래스
+│   ├── Product.php           # 제품 클래스
+│   ├── Sales.php             # 매출 클래스
+│   └── Purchase.php          # 매입 클래스
+│
+├── reports/                  # 리포트 생성
+│   ├── sales_report.php
+│   └── inventory_report.php
+│
+└── uploads/                  # 업로드 파일
+    └── .htaccess            # 보안 설정
+```
+
+## 🗄️ 데이터베이스 설계 (주요 테이블)
+
+### 사용자 관련
+- `사원` - 사용자 정보 (VB 코드의 기존 테이블명 유지)
+
+### 기초 데이터
+- `거래처마스터` - 고객/공급처 정보
+- `제품마스터` - 제품 정보
+- `분류코드` - 제품 분류
+
+### 거래 데이터
+- `매출전표` - 매출 헤더
+- `매출전표상세` - 매출 상세
+- `매입전표` - 매입 헤더
+- `매입전표상세` - 매입 상세
+
+### 재고 관련
+- `재고현황` - 실시간 재고
+- `재고이동` - 이동 내역
+
+### 금융 관련
+- `입금관리` - 입금 내역
+- `출금관리` - 출금 내역
+
+## 🔐 보안 고려사항
+
+1. **세션 관리**
+   - PHP Session 사용
+   - 로그인 시 세션 생성
+   - 권한별 접근 제어
+
+2. **SQL Injection 방지**
+   - PDO Prepared Statements 사용
+   - 입력값 검증
+
+3. **XSS 방지**
+   - htmlspecialchars() 사용
+   - 출력 데이터 이스케이프
+
+4. **CSRF 방지**
+   - 토큰 기반 검증
+
+## 📱 반응형 디자인
+
+- Bootstrap 5 그리드 시스템
+- 모바일/태블릿/데스크톱 대응
+- 터치 인터페이스 최적화
+
+## 🔄 개발 우선순위
+
+### Phase 1 (1-2주)
+1. 로그인/세션 관리
+2. 메인 대시보드
+3. 거래처 관리
+4. 제품 관리
+
+### Phase 2 (2-3주)
+5. 매출전표 입력/조회
+6. 매입전표 입력/조회
+7. 기본 재고 관리
+
+### Phase 3 (2-3주)
+8. 입출금 관리
+9. 통계 리포트
+10. 권한 관리
+
+### Phase 4 (1-2주)
+11. UI/UX 개선
+12. 테스트 및 버그 수정
+13. 문서화
